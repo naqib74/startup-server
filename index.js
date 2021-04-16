@@ -13,18 +13,28 @@ app.use(express.json())
 const uri = "mongodb+srv://startupConsultant:startupConsultant71@cluster0.gaubw.mongodb.net/startup?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
-  const serviceCollection = client.db("startup").collection("services");
+  const reviewCollection = client.db("startup").collection("services");
+  const serviceCollection = client.db("startup").collection("service");
 
+// User Review
   app.post('/addReview',(req,res) =>{
     const review =req.body
     console.log(review)
-    serviceCollection.insertOne(review)
+    reviewCollection.insertOne(review)
     .then(result =>{
       res.send(result.insertedCount > 0)
     })
 
   })
 
+  app.get('/review' , (req,res) =>{
+    reviewCollection.find()
+    .toArray( (err , documents) =>{
+      res.send(documents)
+    })
+  })
+
+  // Admin Service
   app.post('/addService', (req,res) =>{
     const service = req.body
     console.log(service)
@@ -34,7 +44,7 @@ client.connect(err => {
     })
   })
 
-  app.get('/review' , (req,res) =>{
+  app.get('/service',(req , res) =>{
     serviceCollection.find()
     .toArray( (err , documents) =>{
       res.send(documents)
