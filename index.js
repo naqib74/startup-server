@@ -64,7 +64,7 @@ client.connect(err => {
   })
 
   // order details send server
-  app.post('/order',(req,res) =>{
+  app.post('/order/:id',(req,res) =>{
     const order = req.body
     console.log(service)
     orderCollection.insertOne(order)
